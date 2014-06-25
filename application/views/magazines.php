@@ -1,1 +1,1 @@
-<h2> My Magazine view</h2>
+<h2>My magazines</h2>
