@@ -3,23 +3,29 @@
 class Magazine extends CI_Controller {
 
     public function index() {
-        $data = array();
-        $this->load->model('Publication');
-        $publication = new Publication();
-        $publication->load(1);
-        $data['publication'] = $publication;
-        
-        $this->load->model('Issue');
-        $issue = new Issue();
-        $issue->load(1);
-        $data['issue'] = $issue;
-        
-        $this->load->view('magazines', $data);
-        $this->load->view('magazine', $data);
+        $this->load->view('bootstrap/header');
+        $this->load->library('table');
+        $magazines = array();
+        $this->load->model(array('Issue', 'Publication'));
+        $issues = $this->Issue->get();
+        foreach ($issues as $issue) {
+            $publication = new Publication();
+            $publication->load($issue->publication_id);
+            $magazines[] = array(
+                $publication->publication_name,
+                $issue->issue_number,
+                $issue->issue_date_publication,
+            );
+        }
+        $this->load->view('magazines', array(
+            'magazines' => $magazines,
+        ));
+        $this->load->view('bootstrap/footer');
     }
     
 
     public function add() {
+        $this->load->view('bootstrap/header');
         // Populate publications.
         $this->load->model('Publication');
         $publications = $this->Publication->get();
@@ -63,6 +69,7 @@ class Magazine extends CI_Controller {
                 'issue' => $issue,
             ));
         }
+        $this->load->view('bootstrap/footer');
     }
     
 
